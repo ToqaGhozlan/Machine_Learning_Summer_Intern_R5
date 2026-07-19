@@ -243,18 +243,27 @@ Both the frontend and backend perform validation to ensure reliable predictions.
 
 ---
 
-# 📸 Screenshots
+# 📸 Application Screenshots
 
-## 📸 Application Screenshots
+### 🏠 Home Page
 
 <p align="center">
-  <img src="./screenshots/لقطة%20شاشة%202026-07-19%20195435.png" width="45%">
-  <img src="./screenshots/لقطة%20شاشة%202026-07-19%20195537.png" width="45%">
+  <img src="screenshots/لقطة شاشة 2026-07-19 214801.png" width="90%">
+</p>
+
+---
+
+### 🚖 Prediction Examples
+
+<p align="center">
+  <img src="screenshots/لقطة شاشة 2026-07-19 195435.png" width="45%">
+  <img src="screenshots/لقطة شاشة 2026-07-19 195537.png" width="45%">
 </p>
 
 <p align="center">
-  <img src="./screenshots/لقطة%20شاشة%202026-07-19%20195557.png" width="45%">
-  <img src="./screenshots/لقطة%20شاشة%202026-07-19%20195614.png" width="45%">
+  <img src="screenshots/لقطة شاشة 2026-07-19 195557.png" width="45%">
+  <img src="screenshots/لقطة شاشة 2026-07-19 195614.png" width="45%">
 </p>
-
-
+<p align="center">
+  <img src="screenshots/image.png" width="90%">
+</p>
