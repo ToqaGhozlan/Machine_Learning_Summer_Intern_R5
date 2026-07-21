@@ -39,7 +39,11 @@ def initial_bearing_deg(lat1, lon1, lat2, lon2):
 
 
 def geocode_address(address):
-    location = geolocator.geocode(address, timeout=10)
+    query = address
+    if 'new york' not in address.lower() and 'nyc' not in address.lower():
+        query = f"{address}, New York, NY, USA"
+
+    location = geolocator.geocode(query, timeout=10)
     if location is None:
         return None
     return location.latitude, location.longitude
@@ -79,6 +83,19 @@ def index():
 
         try:
             distance_km = haversine_km(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon)
+
+            # Same pickup/dropoff check (allows tiny geocoding jitter on identical addresses)
+            if distance_km < 0.05:
+                error = "Pickup and dropoff locations cannot be the same."
+                return render_template('index.html', error=error)
+
+            # Extra safety net: if both addresses geocoded successfully but the trip
+            # distance is absurd, this is not a "not found" case, it's a real location
+            # that's simply outside NY. Different message than the geocoder-not-found error.
+            if distance_km > 200:
+                error = "Area Outside NY — this predictor only supports trips within the New York City area."
+                return render_template('index.html', error=error)
+
             bearing_deg = initial_bearing_deg(pickup_lat, pickup_lon, dropoff_lat, dropoff_lon)
             jfk_dist = haversine_km(dropoff_lat, dropoff_lon, JFK[0], JFK[1])
             lga_dist = haversine_km(dropoff_lat, dropoff_lon, LGA[0], LGA[1])

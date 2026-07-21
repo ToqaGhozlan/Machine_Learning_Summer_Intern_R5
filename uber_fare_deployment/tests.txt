@@ -1,0 +1,12 @@
+| Test | Pickup | Dropoff | Expected |
+|---|---|---|---|
+| 1 | Times Square | Grand Central Terminal | Low fare (~$8-15) |
+| 2 | Times Square | Central Park Zoo | Low fare |
+| 3 | Empire State Building | Wall Street | Medium fare |
+| 4 | Penn Station | JFK Airport | High fare |
+| 5 | Grand Central Terminal | LaGuardia Airport | Medium-high fare |
+| 6 | Wall Street | Brooklyn Bridge | Medium fare |
+| 7 | Brooklyn Bridge | One World Trade Center | Low-medium fare |
+| 8 | Columbus Circle | Metropolitan Museum of Art | Low fare |
+| 9 | Chelsea Market | Yankee Stadium | High fare |
+| 10 | Battery Park | Central Park | High fare |
