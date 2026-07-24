@@ -46,7 +46,6 @@ Code/
 │   ├── css/
 │   │   └── style.css
 │   └── js/
-│       ├── tailwind-config.js
 │       └── app.js
 └── README.md
 ```
@@ -88,8 +87,7 @@ Code/
   year, and the airport-trip flag) from the raw form inputs before calling
   the model — the same pipeline logic used during training.
 - The UI is split into `templates/index.html` (markup + Jinja logic),
-  `static/css/style.css` (custom styling), `static/js/tailwind-config.js`
-  (Tailwind theme config), and `static/js/app.js` (map interaction, form
-  behavior, and live distance calculation). Flask serves `static/` and
-  `templates/` automatically, so no changes to `app.py` were needed for
-  this split.
+  `static/css/style.css` (plain CSS, no framework), and `static/js/app.js`
+  (map interaction, form behavior, and live distance calculation). Flask
+  serves `static/` and `templates/` automatically, so no changes to
+  `app.py` were needed for this split.
