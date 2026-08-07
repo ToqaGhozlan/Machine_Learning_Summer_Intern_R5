@@ -11,6 +11,9 @@ __pycache__/
 *.sqlite
 .cache.sqlite
 
+# Large Binary Model Checkpoints (>100MB)
+*.pkl
+
 # IDE & Editor files
 .vscode/
 .idea/
