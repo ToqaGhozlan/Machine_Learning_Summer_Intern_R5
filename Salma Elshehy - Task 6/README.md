@@ -362,19 +362,6 @@ can:
 -   Joblib
 -   Streamlit
 
-## Key Takeaways
-
--   SARIMA is designed specifically to model autocorrelation and
-    seasonality in time series.
--   XGBoost can capture nonlinear relationships when temporal
-    information is represented using lag, rolling, calendar, and
-    external features.
--   Future external variables must be available or estimated without
-    using actual future observations.
--   A visually smooth forecast is not automatically an accurate
-    forecast.
--   Final model selection should be based on time-aware evaluation
-    metrics.
 
 ## Author
 
