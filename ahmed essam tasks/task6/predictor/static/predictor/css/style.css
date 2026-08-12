@@ -1,0 +1,118 @@
+:root {
+    --bg-color-1: #0f2027;
+    --bg-color-2: #203a43;
+    --bg-color-3: #2c5364;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --primary: #00d2ff;
+    --secondary: #3a7bd5;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    color: white;
+    background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3));
+    background-attachment: fixed;
+}
+
+.background-container {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #00d2ff, #3a7bd5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+/* Form Styling */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 12px;
+}
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(0, 210, 255, 0.25);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(58, 123, 213, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Prediction Result Coloring */
+.result-box {
+    border-radius: 16px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.result-box.cold .prediction-value { color: #00f2fe; text-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
+.result-box.mild .prediction-value { color: #4facfe; text-shadow: 0 0 15px rgba(79, 172, 254, 0.5); }
+.result-box.warm .prediction-value { color: #f6d365; text-shadow: 0 0 15px rgba(246, 211, 101, 0.5); }
+.result-box.hot  .prediction-value { color: #ff0844; text-shadow: 0 0 15px rgba(255, 8, 68, 0.5); }
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pulse-btn {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
+}
