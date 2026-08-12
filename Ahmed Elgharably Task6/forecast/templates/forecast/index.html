@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Damietta Temperature Forecast — Task 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'forecast/css/style.css' %}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <span class="brand">Damietta<span class="brand-accent">.</span>forecast</span>
+    <span class="badge">Cellula ML Internship &middot; Task 6</span>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <svg class="hero-wave" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,30 C 150,60 300,0 450,30 C 600,60 750,0 900,30 C 1050,60 1150,15 1200,30" />
+    </svg>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Two years of daily NASA&nbsp;POWER records &middot; 31.42&deg;N, 31.81&deg;E</p>
+        <h1>What will the air over Damietta feel like?</h1>
+        <p class="lede">
+          This forecasts daily mean temperature from a <strong>SARIMAX(2,1,2)</strong> model
+          fit with three harmonics of an annual Fourier cycle as exogenous regressors &mdash;
+          the approach Task&nbsp;5 landed on after finding a literal 365-day seasonal order
+          intractable. Two honest baselines, <strong>persistence</strong> and
+          <strong>seasonal-naive</strong>, sit alongside it, because Task&nbsp;5's own evaluation
+          found persistence actually wins at long, static horizons on this smooth, coastal series.
+        </p>
+        <p class="lede-note">
+          Humidity, wind and pressure aren't in the form below &mdash; Task&nbsp;4's EDA found them
+          only weakly correlated with temperature here (r&nbsp;&asymp;&nbsp;&minus;0.1), so
+          they wouldn't move a temperature forecast in any meaningful way.
+        </p>
+        <div class="sparkline-card">
+          <div class="sparkline-head">
+            <span>Last 30 observed days</span>
+            <span class="mono">through {{ meta.last_date }}</span>
+          </div>
+          <canvas id="sparkline" height="120"></canvas>
+        </div>
+      </div>
+
+      <div class="form-card" id="forecast-form-card">
+        <h2>Get a forecast</h2>
+        <form method="post" action="{% url 'forecast:index' %}#forecast-form-card" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-error">
+              {% for err in form.non_field_errors %}<p>{{ err }}</p>{% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="field-group">
+            <label for="{{ form.model_choice.id_for_label }}">{{ form.model_choice.label }}</label>
+            {{ form.model_choice }}
+          </div>
+
+          <div class="field-group">
+            <label for="{{ form.target_date.id_for_label }}">{{ form.target_date.label }}</label>
+            {{ form.target_date }}
+            <p class="hint mono">valid {{ date_bounds.min }} &rarr; {{ date_bounds.max }}</p>
+            {% for err in form.target_date.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+
+          <div class="field-group">
+            <label for="{{ form.override_temp.id_for_label }}">{{ form.override_temp.label }}</label>
+            {{ form.override_temp }}
+            <p class="hint">{{ form.override_temp.help_text }}</p>
+            {% for err in form.override_temp.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+
+          <button type="submit" class="btn-forecast">Forecast &rarr;</button>
+        </form>
+
+        <p class="api-note">
+          Prefer raw data? <code class="mono">GET /api/predict/?model=sarimax&amp;date=YYYY-MM-DD</code>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {% if result %}
+  <section class="result-section" id="result">
+    <div class="wrap">
+      <div class="result-panel temp-{{ result.temp_band|default:'mild' }}" data-temp="{{ result.predicted_temp_c }}">
+        <div class="result-icon" aria-hidden="true"></div>
+        <div class="result-main">
+          <p class="result-label">{{ result.model_label }} &middot; {{ result.target_date }}
+            <span class="mono">({{ result.horizon_days }}d ahead)</span>
+            {% if from_cache %}<span class="cache-tag">served from cache</span>{% endif %}
+          </p>
+          <p class="result-temp">{{ result.predicted_temp_c }}<span class="unit">&deg;C</span></p>
+          {% if result.ci_low_c is not None %}
+            <p class="result-ci mono">95% interval: {{ result.ci_low_c }}&deg;C &ndash; {{ result.ci_high_c }}&deg;C</p>
+          {% endif %}
+          <p class="result-note">{{ result.note }}</p>
+          <p class="result-mae mono">Expected error at this range (test-set MAE): &plusmn;{{ result.expected_mae_c }}&deg;C</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="context-section">
+    <div class="wrap context-grid">
+      <div class="context-card">
+        <h3>Dataset</h3>
+        <p>{{ meta.n_obs }} daily observations, {{ meta.first_date }} &rarr; {{ meta.last_date }}, from the
+           NASA&nbsp;POWER API for Damietta, Egypt. 0 missing values, 0 duplicate timestamps.</p>
+      </div>
+      <div class="context-card">
+        <h3>Evaluated accuracy (Task 5, held-out test set)</h3>
+        <table class="metrics-table mono">
+          <tbody>
+            <tr><td>SARIMAX &mdash; 14d walk-forward</td><td>{{ meta.metrics.sarimax_walkforward_14d_mae }}&deg;C MAE</td></tr>
+            <tr><td>SARIMAX &mdash; static 90d</td><td>{{ meta.metrics.sarimax_static_90d.mae }}&deg;C MAE</td></tr>
+            <tr><td>Persistence &mdash; static 90d</td><td>{{ meta.metrics.persistence_static_90d.mae }}&deg;C MAE</td></tr>
+            <tr><td>Seasonal-naive &mdash; static 90d</td><td>{{ meta.metrics.seasonal_naive_static_90d.mae }}&deg;C MAE</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="context-card">
+        <h3>Method note</h3>
+        <p>Order (2,1,2) chosen by <code class="mono">auto_arima</code> on the first-differenced series;
+           annual seasonality carried by Fourier exogenous terms rather than a literal
+           <code class="mono">m=365</code> seasonal order. Refit on the full two-year record for this
+           deployed version. Full derivation in <code class="mono">Task5_TimeSeries_Forecasting.ipynb</code>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Data: NASA POWER API. Continues from Task 4 (EDA) &amp; Task 5 (SARIMAX/RNN forecasting) &mdash;
+       Cellula Technologies ML Internship Program.</p>
+  </div>
+</footer>
+
+{{ recent_history|json_script:"recent-history-data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="{% static 'forecast/js/app.js' %}"></script>
+</body>
+</html>
