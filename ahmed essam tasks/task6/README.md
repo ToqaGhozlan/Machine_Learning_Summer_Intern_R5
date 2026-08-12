@@ -34,8 +34,4 @@ This project wraps a pre-trained Simple RNN model for predicting Cairo's daily m
 4. **View the App**:
    Open a browser and navigate to `http://127.0.0.1:8000/`.
 
-## Usage
 
-- Click "Load Sample Data" to pre-fill the form with the last 30 days of data from the training set.
-- Click "Predict Tomorrow" to see the prediction.
-- To test the API, you can send a POST request with JSON containing a `temperatures` array of 30 values to `http://127.0.0.1:8000/api/predict/`.
