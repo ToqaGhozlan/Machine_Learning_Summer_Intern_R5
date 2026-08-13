@@ -1,0 +1,6 @@
+Django>=5.0,<6.0
+statsmodels>=0.14
+pmdarima>=2.0
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.3

@@ -1,0 +1,69 @@
+:root {
+    --brand-blue: #2563eb;
+    --brand-navy: #0f172a;
+    --brand-bg: #f1f5f9;
+}
+
+body {
+    background: linear-gradient(180deg, #eef2ff 0%, var(--brand-bg) 100%);
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--brand-navy);
+}
+
+.app-wrapper {
+    min-height: 100vh;
+}
+
+.app-icon {
+    font-size: 2.75rem;
+    color: var(--brand-blue);
+}
+
+h1 {
+    color: var(--brand-navy);
+}
+
+.card {
+    background: #ffffff;
+}
+
+.btn-primary {
+    background-color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.form-control, .form-select {
+    border-radius: 0.6rem;
+    border: 1px solid #cbd5e1;
+    padding: 0.55rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}
+
+.result-card {
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+    border: 1px solid #a7f3d0 !important;
+}
+
+.result-icon {
+    font-size: 2.25rem;
+    color: #059669;
+}
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.6rem;
+    }
+    .display-5 {
+        font-size: 2rem;
+    }
+}

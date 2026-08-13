@@ -1,0 +1,220 @@
+{% extends "predictor/base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <div class="text-center mb-4">
+                <div class="app-icon mb-2"><i class="bi bi-cloud-sun-fill"></i></div>
+                <h1 class="fw-bold">Weather Temperature Predictor</h1>
+                <p class="text-muted">
+                    Pick a forecasting model, enter today's conditions, and get an instant
+                    temperature prediction from the models trained in Task 5.
+                </p>
+            </div>
+
+            {% if load_errors %}
+                <div class="alert alert-warning">
+                    <strong>Heads up:</strong> some models aren't loaded yet.
+                    <ul class="mb-0">
+                        {% for key, msg in load_errors.items %}
+                            <li>{{ msg }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <form method="post" id="predict-form" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="{{ form.model_choice.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.model_choice.label }}
+                            </label>
+                            {{ form.model_choice }}
+                            {% for error in form.model_choice.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Forecast date: shown for arma_manual (converted to a horizon
+                             internally) and fourier_auto (used to build seasonal terms).
+                             Rendered ONCE — armax_auto doesn't use it at all, since it has
+                             no date-derived features, so it's just hidden for that model. -->
+                        <div class="mb-3" id="group-forecast_date">
+                            <label for="{{ form.forecast_date.id_for_label }}" class="form-label" id="label-forecast_date">
+                                {{ form.forecast_date.label }}
+                            </label>
+                            {{ form.forecast_date }}
+                            <div class="form-text" id="help-forecast_date"></div>
+                            {% for error in form.forecast_date.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- ARMAX / Fourier: weather covariates -->
+                        <div id="group-covariates" class="model-group">
+                            <div class="row g-3">
+                                {% for field in form %}
+                                    {% if field.name in exog_fields %}
+                                        <div class="col-6 col-md-4">
+                                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                            {{ field }}
+                                            {% for error in field.errors %}
+                                                <div class="text-danger small mt-1">{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3">
+                                <i class="bi bi-thermometer-half"></i> Predict Temperature
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if result %}
+                <div class="card border-0 rounded-4 shadow-sm result-card">
+                    <div class="card-body p-4 text-center">
+                        <div class="result-icon mb-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <h2 class="display-5 fw-bold mb-0">{{ result.predicted_temp|floatformat:1 }}°C</h2>
+                        <p class="text-muted mb-2">
+                            95% range: {{ result.lower|floatformat:1 }}°C &ndash; {{ result.upper|floatformat:1 }}°C
+                        </p>
+                        <p class="mb-0">{{ result.detail }}</p>
+                        {% if from_cache %}
+                            <span class="badge bg-secondary mt-2"><i class="bi bi-lightning-fill"></i> served from cache</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if chart_data.labels %}
+                <div class="card border-0 rounded-4 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-graph-up"></i> Recent predictions & confidence range</h6>
+                        <canvas id="recent-chart" height="220"></canvas>
+                    </div>
+                </div>
+            {% endif %}
+
+            <p class="text-center text-muted small mt-4">
+                Prefer JSON? Hit <code>/api/predict/</code> with the same field names.
+            </p>
+        </div>
+    </div>
+</div>
+
+{{ chart_data|json_script:"chart-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chartEl = document.getElementById("recent-chart");
+    if (chartEl) {
+        const data = JSON.parse(document.getElementById("chart-data").textContent);
+
+        new Chart(chartEl, {
+            type: "line",
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: "Upper bound (95%)",
+                        data: data.upper,
+                        borderColor: "rgba(37, 99, 235, 0.25)",
+                        backgroundColor: "rgba(37, 99, 235, 0.08)",
+                        borderDash: [4, 4],
+                        pointRadius: 0,
+                        fill: "+1",
+                        tension: 0.3,
+                    },
+                    {
+                        label: "Lower bound (95%)",
+                        data: data.lower,
+                        borderColor: "rgba(37, 99, 235, 0.25)",
+                        borderDash: [4, 4],
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0.3,
+                    },
+                    {
+                        label: "Predicted temp (°C)",
+                        data: data.predicted,
+                        borderColor: "#2563eb",
+                        backgroundColor: "#2563eb",
+                        pointRadius: 4,
+                        tension: 0.3,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: {
+                        callbacks: {
+                            afterTitle: function (items) {
+                                const i = items[0].dataIndex;
+                                return "Model: " + data.model_choice[i];
+                            },
+                        },
+                    },
+                },
+                scales: {
+                    y: { title: { display: true, text: "°C" } },
+                },
+            },
+        });
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modelSelect = document.getElementById("{{ form.model_choice.id_for_label }}");
+    const covariateGroup = document.getElementById("group-covariates");
+    const dateGroup = document.getElementById("group-forecast_date");
+    const dateLabel = document.getElementById("label-forecast_date");
+    const dateHelp = document.getElementById("help-forecast_date");
+
+    const DATE_HELP = {
+        arma_manual: "Any date after 2025-07-31.",
+        fourier_auto: "Used to compute the model's seasonal (annual) terms.",
+    };
+
+    function updateVisibility() {
+        const choice = modelSelect.value;
+
+        // Weather covariates: needed by armax_auto and fourier_auto, not arma_manual
+        covariateGroup.style.display = choice === "arma_manual" ? "none" : "block";
+
+        // Forecast date: needed by arma_manual and fourier_auto, not armax_auto
+        const needsDate = choice === "arma_manual" || choice === "fourier_auto";
+        dateGroup.style.display = needsDate ? "block" : "none";
+        if (needsDate) {
+            dateLabel.textContent = choice === "arma_manual" ? "Forecast date" : "Forecast date (for seasonal terms)";
+            dateHelp.textContent = DATE_HELP[choice];
+        }
+    }
+
+    modelSelect.addEventListener("change", updateVisibility);
+    updateVisibility();
+});
+</script>
+{% endblock %}
