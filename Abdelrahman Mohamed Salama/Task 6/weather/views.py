@@ -14,7 +14,7 @@ def predict_view(request):
         if form.is_valid():
             weather_values = {f: form.cleaned_data[f] for f in WEATHER_FEATURES}
             try:
-                result = predict_next_day(weather_values)
+                result = predict_next_day(weather_values)# func to predict the next day temperature based on the user input weather values
             except FileNotFoundError:
                 error = "Model file not found on the server. Check models/sarima_fourier_model.pkl."
                 traceback.print_exc()

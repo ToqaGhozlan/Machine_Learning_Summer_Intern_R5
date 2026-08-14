@@ -7,22 +7,10 @@ from pathlib import Path
 
 import dj_database_url
 
-
-# ---------------------------------------------------------
-# BASE DIRECTORY
-# ---------------------------------------------------------
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# ---------------------------------------------------------
-# SECURITY
-# ---------------------------------------------------------
-
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-development-key")
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-
 ALLOWED_HOSTS = []
 
 render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
@@ -37,9 +25,6 @@ ALLOWED_HOSTS += [
 ]
 
 
-# ---------------------------------------------------------
-# APPLICATIONS
-# ---------------------------------------------------------
 
 INSTALLED_APPS = [
     "weather",
@@ -53,9 +38,7 @@ INSTALLED_APPS = [
 ]
 
 
-# ---------------------------------------------------------
-# MIDDLEWARE
-# ---------------------------------------------------------
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -72,16 +55,11 @@ MIDDLEWARE = [
 ]
 
 
-# ---------------------------------------------------------
-# URLS
-# ---------------------------------------------------------
+
 
 ROOT_URLCONF = "weather_project.urls"
 
 
-# ---------------------------------------------------------
-# TEMPLATES
-# ---------------------------------------------------------
 
 TEMPLATES = [
     {
@@ -99,17 +77,11 @@ TEMPLATES = [
 ]
 
 
-# ---------------------------------------------------------
-# WSGI / ASGI
-# ---------------------------------------------------------
 
 WSGI_APPLICATION = "weather_project.wsgi.application"
 ASGI_APPLICATION = "weather_project.asgi.application"
 
 
-# ---------------------------------------------------------
-# DATABASE
-# ---------------------------------------------------------
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -119,9 +91,6 @@ DATABASES = {
 }
 
 
-# ---------------------------------------------------------
-# PASSWORD VALIDATION
-# ---------------------------------------------------------
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -151,9 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# ---------------------------------------------------------
-# INTERNATIONALIZATION
-# ---------------------------------------------------------
 
 LANGUAGE_CODE = "en-us"
 
@@ -164,10 +130,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# ---------------------------------------------------------
-# STATIC FILES
-# ---------------------------------------------------------
-
 STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -177,23 +139,12 @@ STATICFILES_STORAGE = (
 )
 
 
-# ---------------------------------------------------------
-# DEFAULT PRIMARY KEY
-# ---------------------------------------------------------
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-# ---------------------------------------------------------
-# EMAIL
-# ---------------------------------------------------------
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
-# ---------------------------------------------------------
-# PRODUCTION SECURITY
-# ---------------------------------------------------------
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

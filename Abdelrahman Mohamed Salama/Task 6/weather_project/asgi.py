@@ -6,11 +6,10 @@ It exposes the ASGI callable as a module-level variable named ``application``.
 For more information on this file, see
 https://docs.djangoproject.com/en/6.1/howto/deployment/asgi/
 """
-
+#asgi.py is the interface between Django and an ASGI web server.
+#this is the entry point for ASGI-compatible web servers to serve your project.
 import os
-
 from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'weather_project.settings')
-
 application = get_asgi_application()

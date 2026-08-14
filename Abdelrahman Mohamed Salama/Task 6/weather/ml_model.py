@@ -2,10 +2,6 @@
 Loads the trained SARIMAX (order=(2,1,1)) + Fourier exogenous model once per process
 and produces a one-day-ahead temperature forecast from user-supplied weather inputs.
 
-Fourier terms are reconstructed exactly as in training (Task 5 notebook):
-    t = day offset from 2021-01-01 (continuous across the full dataset)
-    sin_k = sin(2*pi*k*t/365.25), cos_k = cos(2*pi*k*t/365.25), k = 1..3
-
 The forecast is always for the first day after the training data ends
 (model.nobs steps in), since that's the only point where "t" is unambiguous
 without asking the user for a date.
@@ -40,7 +36,7 @@ _lock = threading.Lock()
 
 
 def get_model():
-    """Load the trained model once and reuse it across requests (thread-safe)."""
+    #Load the trained model once and reuse it across requests (thread-safe)
     global _model
     if _model is None:
         with _lock:
@@ -56,12 +52,8 @@ def _fourier_terms(t: int) -> dict:
         terms[f"cos_{k}"] = np.cos(2 * np.pi * k * t / ANNUAL_PERIOD)
     return terms
 
-
+# helps to predict the next day temperature based on the user input weather values
 def predict_next_day(weather_values: dict) -> dict:
-    """
-    weather_values: dict with the 6 WEATHER_FEATURES keys (floats).
-    Returns predicted temperature, 95% CI bounds, and the calendar date forecasted.
-    """
     model = get_model()
 
     t_next = model.nobs  # first out-of-sample step, continuing the training day-index
