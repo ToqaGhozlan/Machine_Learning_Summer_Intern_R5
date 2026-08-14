@@ -1,0 +1,52 @@
+{% extends "forecast/base.html" %}
+
+{% block title %}Egypt Weather Forecast — Dashboard{% endblock %}
+
+{% block content %}
+<header class="console__header">
+    <p class="console__eyebrow">Egypt · Daily Temperature Forecast</p>
+    <h1 class="console__title">Next Day's Weather</h1>
+</header>
+<form method="get" class="date-form">
+    <label for="date">Pick a date</label>
+    <input
+        type="date"
+        id="date"
+        name="date"
+        min="{{ min_date|date:'Y-m-d' }}"
+        max="{{ max_date|date:'Y-m-d' }}"
+        value="{{ selected_date }}"
+    >
+    <button type="submit">Forecast</button>
+    <p class="date-form__note">
+        Allowed range: {{ min_date|date:"M j, Y" }} – {{ max_date|date:"M j, Y" }}
+    </p>
+</form>
+
+{% if error %}
+<section class="console__error">
+    <p>{{ error }}</p>
+</section>
+{% endif %}
+
+{% if prediction %}
+<section class="console__main">
+    <div class="gauge-wrap">
+        <div id="gauge"
+             class="gauge"
+             data-predicted="{{ prediction.predicted_t2m_celsius }}"
+             data-min="{{ gauge_min }}"
+             data-max="{{ gauge_max }}"></div>
+        <div class="gauge-readout">
+            <span class="gauge-readout__value">{{ prediction.predicted_t2m_celsius }}<span class="gauge-readout__unit">°C</span></span>
+            <span class="gauge-readout__date">{{ prediction.predicted_date|date:"D, M j Y" }}</span>
+        </div>
+    </div>
+
+</section>
+
+<footer class="console__footer">
+    <p>Based on history through <span class="mono">{{ prediction.based_on_last_date }}</span></p>
+</footer>
+{% endif %}
+{% endblock %}
