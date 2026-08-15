@@ -1,60 +1,34 @@
 from django import forms
 
+from .ml_model import get_forecast_window
 
-class WeatherInputForm(forms.Form):
-    max_temperature = forms.FloatField(
-        label="Max Temperature (°C)",
-        min_value=-10,
-        max_value=50,
-        widget=forms.NumberInput(attrs={
-            "class": "form-control", "step": "0.1", "placeholder": "e.g. 28.5",
-        }),
-    )
-    min_temperature = forms.FloatField(
-        label="Min Temperature (°C)",
-        min_value=-10,
-        max_value=40,
-        widget=forms.NumberInput(attrs={
-            "class": "form-control", "step": "0.1", "placeholder": "e.g. 18.0",
-        }),
-    )
-    precipitation = forms.FloatField(
-        label="Precipitation (mm)",
-        min_value=0,
-        max_value=200,
-        widget=forms.NumberInput(attrs={
-            "class": "form-control", "step": "0.1", "placeholder": "e.g. 0.0",
-        }),
-    )
-    humidity = forms.FloatField(
-        label="Humidity (%)",
-        min_value=0,
-        max_value=100,
-        widget=forms.NumberInput(attrs={
-            "class": "form-control", "step": "0.1", "placeholder": "e.g. 65.0",
-        }),
-    )
-    wind_speed = forms.FloatField(
-        label="Wind Speed (m/s)",
-        min_value=0,
-        max_value=40,
-        widget=forms.NumberInput(attrs={
-            "class": "form-control", "step": "0.1", "placeholder": "e.g. 3.2",
-        }),
-    )
-    solar_radiation = forms.FloatField(
-        label="Solar Radiation (kWh/m²)",
-        min_value=0,
-        max_value=15,
-        widget=forms.NumberInput(attrs={
-            "class": "form-control", "step": "0.01", "placeholder": "e.g. 5.4",
+
+class ForecastDateForm(forms.Form):
+    forecast_date = forms.DateField(
+        label="Forecast Date",
+        widget=forms.DateInput(attrs={
+            "class": "form-control", "type": "date",
         }),
     )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        min_t = cleaned_data.get("min_temperature")
-        max_t = cleaned_data.get("max_temperature")
-        if min_t is not None and max_t is not None and min_t > max_t:
-            self.add_error("min_temperature", "Min temperature can't exceed max temperature.")
-        return cleaned_data
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Bounds depend on the trained model (how many days of data it saw),
+        # so they're computed at request time and used both for the HTML
+        # date-picker limits and for server-side validation below.
+        self.min_date, self.max_date = get_forecast_window()
+        self.fields["forecast_date"].widget.attrs.update({
+            "min": self.min_date.isoformat(),
+            "max": self.max_date.isoformat(),
+        })
+        self.fields["forecast_date"].help_text = (
+            f"Pick a date between {self.min_date:%b %d, %Y} and {self.max_date:%b %d, %Y}."
+        )
+
+    def clean_forecast_date(self):
+        d = self.cleaned_data["forecast_date"]
+        if d < self.min_date or d > self.max_date:
+            raise forms.ValidationError(
+                f"Date must be between {self.min_date:%b %d, %Y} and {self.max_date:%b %d, %Y}."
+            )
+        return d

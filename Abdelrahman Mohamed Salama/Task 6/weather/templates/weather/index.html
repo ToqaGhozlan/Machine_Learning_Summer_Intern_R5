@@ -3,39 +3,33 @@
 {% block content %}
 <div class="row justify-content-center g-4 pb-5">
 
-    <!-- Weather Input Form -->
+    <!-- Forecast Date Input -->
     <div class="col-lg-6">
         <div class="card p-4">
 
-            <h5 class="mb-1">Weather Inputs</h5>
+            <h5 class="mb-1">Forecast Date</h5>
             <p class="text-muted small mb-3">
-                Enter expected conditions for the next day
+                Pick a date to see the predicted temperature for Alexandria
             </p>
 
             <form method="post" novalidate>
                 {% csrf_token %}
 
-                <div class="row g-3">
+                <label class="form-label" for="{{ form.forecast_date.id_for_label }}">
+                    {{ form.forecast_date.label }}
+                </label>
 
-                    {% for field in form %}
-                    <div class="col-md-6">
+                {{ form.forecast_date }}
 
-                        <label class="form-label" for="{{ field.id_for_label }}">
-                            {{ field.label }}
-                        </label>
+                {% if form.forecast_date.help_text %}
+                    <div class="form-text">{{ form.forecast_date.help_text }}</div>
+                {% endif %}
 
-                        {{ field }}
-
-                        {% if field.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ field.errors.0 }}
-                            </div>
-                        {% endif %}
-
+                {% if form.forecast_date.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.forecast_date.errors.0 }}
                     </div>
-                    {% endfor %}
-
-                </div>
+                {% endif %}
 
                 {% if form.non_field_errors %}
                     <div class="text-danger small mt-3">
@@ -62,7 +56,22 @@
             <div class="display-5 fw-bold text-success">
                 {{ result.predicted_temperature|floatformat:1 }}°C
             </div>
-
+            <p class="text-muted small mt-1 mb-3">
+                Forecast for {{ result.forecast_date }}
+            </p>
+            <p class="text-muted small mb-3">
+                95% confidence range: {{ result.lower_bound|floatformat:1 }}°C – {{ result.upper_bound|floatformat:1 }}°C
+            </p>
+            <hr>
+            <p class="text-muted small mb-1">Estimated conditions used (seasonal average for that date):</p>
+            <p class="text-muted small mb-0">
+                Max {{ result.estimated_inputs.max_temperature }}°C ·
+                Min {{ result.estimated_inputs.min_temperature }}°C ·
+                Humidity {{ result.estimated_inputs.humidity }}% ·
+                Wind {{ result.estimated_inputs.wind_speed }} m/s ·
+                Precip {{ result.estimated_inputs.precipitation }} mm ·
+                Solar {{ result.estimated_inputs.solar_radiation }} kWh/m²
+            </p>
         </div>
 
         {% elif error %}
