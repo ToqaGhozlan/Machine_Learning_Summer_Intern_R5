@@ -1,0 +1,197 @@
+{% extends "weather_app/base.html" %}
+
+{% block title %}Model Information - Weather Predictor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Model Information Card -->
+        <div class="card">
+            <div class="card-header">
+                <h1>
+                    <i class="bi bi-info-circle"></i>
+                    Model Information
+                </h1>
+                <p class="mb-0" style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.9;">
+                    Details about the SARIMA weather forecasting model
+                </p>
+            </div>
+
+            <div class="card-body">
+                {% if model_info.status == "loaded" %}
+                    <!-- Model Status -->
+                    <div class="info-panel" style="margin-bottom: 2rem;">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong>Status:</strong> Model Loaded and Ready
+                    </div>
+
+                    <!-- Model Configuration -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div style="margin-bottom: 1.5rem;">
+                                <h6><i class="bi bi-gear"></i> Model Parameters</h6>
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td><strong>ARIMA Order:</strong></td>
+                                        <td><code>{{ model_info.order }}</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Seasonal Order:</strong></td>
+                                        <td><code>{{ model_info.seasonal_order }}</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Seasonal Period:</strong></td>
+                                        <td>{{ model_info.seasonal_period }} days</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Frequency:</strong></td>
+                                        <td>{{ model_info.frequency }} (Daily)</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div style="margin-bottom: 1.5rem;">
+                                <h6><i class="bi bi-graph-up"></i> Data Statistics</h6>
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td><strong>Mean Temperature:</strong></td>
+                                        <td>{{ model_info.target_mean|floatformat:2 }}°C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Std. Deviation:</strong></td>
+                                        <td>{{ model_info.target_std|floatformat:2 }}°C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Minimum:</strong></td>
+                                        <td>{{ model_info.target_min|floatformat:2 }}°C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Maximum:</strong></td>
+                                        <td>{{ model_info.target_max|floatformat:2 }}°C</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training Information -->
+                    <hr>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h6><i class="bi bi-calendar-event"></i> Training Information</h6>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td><strong>Training End Date:</strong></td>
+                                <td>{{ model_info.training_end_date }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Test Period Start:</strong></td>
+                                <td>{{ model_info.test_start_date }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Test Period End:</strong></td>
+                                <td>{{ model_info.test_end_date }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- About SARIMA -->
+                    <hr>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h6><i class="bi bi-book"></i> About SARIMA</h6>
+                        <p>
+                            <strong>SARIMA</strong> (Seasonal AutoRegressive Integrated Moving Average) is a time series forecasting method that:
+                        </p>
+                        <ul>
+                            <li><strong>Captures seasonality:</strong> Identifies and models repeating patterns (e.g., weekly cycles)</li>
+                            <li><strong>Handles trends:</strong> Uses differencing to make non-stationary data stationary</li>
+                            <li><strong>Uses autocorrelation:</strong> Leverages past observations to predict future values</li>
+                            <li><strong>Provides uncertainty:</strong> Generates confidence intervals around predictions</li>
+                        </ul>
+                    </div>
+
+                    <!-- How It Works -->
+                    <hr>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h6><i class="bi bi-lightning"></i> How Predictions Work</h6>
+                        <ol>
+                            <li>The model analyzes the complete historical temperature time series</li>
+                            <li>It identifies seasonal patterns (7-day cycles in this case)</li>
+                            <li>It applies differencing to remove trends</li>
+                            <li>It uses ARIMA components to model autoregressive and moving average effects</li>
+                            <li>Based on these patterns, it forecasts temperature for your requested horizon</li>
+                            <li>It also provides a 95% confidence interval around the prediction</li>
+                        </ol>
+                    </div>
+
+                    <!-- Model Metrics -->
+                    <hr>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h6><i class="bi bi-calculator"></i> Model Performance Metrics</h6>
+                        <p class="text-muted small">
+                            These metrics represent the model's performance on a held-out test set:
+                        </p>
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>SARIMA</th>
+                                    <th>Persistence (Baseline)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>MAE</strong> (Mean Absolute Error)</td>
+                                    <td>3.11°C</td>
+                                    <td>3.40°C</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>RMSE</strong> (Root Mean Squared Error)</td>
+                                    <td>3.44°C</td>
+                                    <td>3.73°C</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SMAPE</strong> (Symmetric Mean Absolute %)</td>
+                                    <td>67.73%</td>
+                                    <td>87.14%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-muted small" style="margin-top: 1rem;">
+                            The SARIMA model outperforms the simple persistence baseline, indicating that the learned seasonal and autoregressive patterns are useful for forecasting.
+                        </p>
+                    </div>
+
+                    <!-- Limitations -->
+                    <hr>
+                    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px; padding: 1rem;">
+                        <h6><i class="bi bi-exclamation-triangle-fill"></i> Limitations</h6>
+                        <ul style="margin-bottom: 0;">
+                            <li>Predictions are based on historical patterns and may not account for unprecedented weather events</li>
+                            <li>The model was trained on {{ weather_location.name }}-specific data; apply with caution to other locations</li>
+                            <li>Forecasts are less reliable for horizons beyond 4 weeks</li>
+                            <li>Confidence intervals assume the past patterns will continue into the future</li>
+                            <li>This is a statistical model, not a weather simulation; it does not include physical weather processes</li>
+                        </ul>
+                    </div>
+
+                {% else %}
+                    <div class="alert alert-danger-custom alert-custom">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <strong>Error:</strong> Model information is not available. Please check that the model file exists.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Back to Prediction -->
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="{% url 'weather_app:predict' %}" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+                <i class="bi bi-arrow-left"></i>
+                Back to Prediction
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
