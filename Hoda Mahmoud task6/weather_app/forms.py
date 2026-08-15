@@ -26,7 +26,9 @@ class TemperaturePredictionForm(forms.Form):
     
     horizon_days = forms.ChoiceField(
         choices=HORIZON_CHOICES,
-        initial=1,
+        # ChoiceField values are submitted as strings.  Keeping the initial
+        # value a string lets the template mark the first option as checked.
+        initial='1',
         widget=forms.RadioSelect,
         label='Forecast Horizon',
         help_text='Select how many days ahead you want to predict temperature'

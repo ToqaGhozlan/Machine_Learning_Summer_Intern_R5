@@ -13,7 +13,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+# Accept conventional deployment labels (for example ``DEBUG=release``) as
+# production mode as well as the usual true/false values.
+DEBUG = config(
+    'DEBUG',
+    default=True,
+    cast=lambda value: str(value).strip().lower() in {'1', 'true', 'yes', 'on', 'debug'},
+)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
@@ -117,9 +123,9 @@ if not DEBUG:
     }
 
 # Model paths
-ML_MODEL_DIR = os.path.join(BASE_DIR, 'outputs', 'Cairo', 'model')
+# The deployed SARIMA artifact was trained with the London dataset.
+ML_MODEL_DIR = os.path.join(BASE_DIR, 'outputs', 'London', 'model')
 ML_MODEL_PATH = os.path.join(ML_MODEL_DIR, 'sarima_model.pkl')
 
-# Provenance record for the data used by the deployed model; ``Cairo`` is a
-# legacy directory name and does not describe the dataset's geography.
-WEATHER_DATA_RESPONSE_PATH = os.path.join(BASE_DIR, 'outputs', 'Cairo', 'raw', 'power_response.json')
+# Provenance record for the data used by the deployed model.
+WEATHER_DATA_RESPONSE_PATH = os.path.join(BASE_DIR, 'outputs', 'London', 'raw', 'power_response.json')
