@@ -1,0 +1,172 @@
+{% extends "weather_app/base.html" %}
+
+{% block title %}Temperature Prediction - Weather Predictor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Main Prediction Card -->
+        <div class="card">
+            <div class="card-header">
+                <h1>
+                    <i class="bi bi-thermometer-half"></i>
+                    Temperature Forecast
+                </h1>
+                <p class="mb-0" style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.9;">
+                    Predict {{ weather_location.name }}'s temperature for your desired forecast horizon using SARIMA modeling
+                </p>
+            </div>
+
+            <div class="card-body">
+                <!-- Model Status Info -->
+                {% if model_info.status == "loaded" %}
+                <div class="info-panel">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <strong>Model Status:</strong> Ready to predict
+                    <small class="d-block" style="margin-top: 0.5rem;">
+                        Trained through {{ model_info.training_end_date }} | Forecasting daily {{ weather_location.name }} temperatures
+                    </small>
+                </div>
+                {% else %}
+                <div class="alert alert-danger-custom alert-custom">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong>Warning:</strong> Model is not available. Please check that the model file exists.
+                </div>
+                {% endif %}
+
+                <!-- Error Messages -->
+                {% if form_errors %}
+                <div class="alert alert-danger-custom alert-custom">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <strong>Error:</strong> {{ form_errors }}
+                </div>
+                {% endif %}
+
+                <!-- Prediction Form -->
+                <form method="post" class="needs-validation">
+                    {% csrf_token %}
+
+                    <!-- Forecast Horizon Selection -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-calendar-event"></i>
+                            How many days ahead would you like to forecast?
+                        </label>
+                        
+                        <div class="radio-group">
+                            {% for value, label in form.horizon_days.field.choices %}
+                            <div class="radio-item">
+                                <input type="radio" id="id_horizon_days_{{ forloop.counter }}" 
+                                       name="horizon_days" value="{{ value }}"
+                                       {% if form.horizon_days.value == value|stringformat:"s" %}checked{% endif %}>
+                                <label for="id_horizon_days_{{ forloop.counter }}">
+                                    {{ label }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="help-text">
+                            <i class="bi bi-info-circle"></i>
+                            Select a forecast horizon. The model will predict the average temperature for that date based on historical patterns.
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group">
+                        <button type="submit" class="btn-predict">
+                            <i class="bi bi-play-circle"></i>
+                            Generate Forecast
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Prediction Result -->
+                {% if prediction_result and prediction_result.success %}
+                <div class="result-card">
+                    <div class="result-label">
+                        <i class="bi bi-cloud-sun-fill"></i>
+                        Predicted Temperature
+                    </div>
+
+                    <div>
+                        <span class="result-value">{{ prediction_result.prediction|floatformat:2 }}</span>
+                        <span class="result-unit">°C</span>
+                    </div>
+
+                    <div class="result-details">
+                        <div class="result-detail-item">
+                            <span><i class="bi bi-calendar-check"></i> <strong>Forecast Horizon:</strong></span>
+                            <span>{{ prediction_result.horizon_days }} day{{ prediction_result.horizon_days|pluralize }}</span>
+                        </div>
+
+                        <!-- Confidence Interval -->
+                        <div class="confidence-interval">
+                            <div style="margin-bottom: 0.5rem;">
+                                <strong>95% Confidence Interval:</strong>
+                            </div>
+                            <div style="font-size: 0.95rem;">
+                                <div class="d-flex justify-content-between">
+                                    <span>Lower Bound:</span>
+                                    <span><strong>{{ prediction_result.lower_ci|floatformat:2 }}°C</strong></span>
+                                </div>
+                                <div class="d-flex justify-content-between" style="margin-top: 0.5rem;">
+                                    <span>Upper Bound:</span>
+                                    <span><strong>{{ prediction_result.upper_ci|floatformat:2 }}°C</strong></span>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.85rem; margin-top: 0.75rem; color: #155724; font-style: italic;">
+                                We are 95% confident the actual temperature will fall within this range.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #155724; font-size: 0.9rem; color: #155724;">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Model Info:</strong> SARIMA ({{ model_info.order }}, {{ model_info.seasonal_order }}) forecasting daily {{ weather_location.name }} temperatures
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Additional Information Card -->
+        <div class="card" style="margin-top: 2rem;">
+            <div class="card-header">
+                <h5 style="margin: 0;">
+                    <i class="bi bi-book"></i>
+                    About This Model
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-gear"></i> Model Type</h6>
+                        <p>SARIMA (Seasonal AutoRegressive Integrated Moving Average) - A specialized time series model designed for data with seasonal patterns.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-geo-alt"></i> Location</h6>
+                        <p>{{ weather_location.full_name }} ({{ weather_location.coordinates }})</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-calendar-range"></i> Data Frequency</h6>
+                        <p>Daily average temperatures based on NASA POWER climate data</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-graph-up"></i> Seasonality</h6>
+                        <p>Weekly (7-day) patterns are captured in the model</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #dee2e6;">
+                    <small class="text-muted">
+                        <strong>Disclaimer:</strong> This model provides statistical forecasts based on historical temperature patterns. 
+                        Actual temperatures may differ due to unexpected weather events or climate changes. 
+                        Use these predictions as a guide rather than definitive weather forecasts.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Cairo Weather</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'forecast/css/style.css' %}">
+</head>
+<body>
+
+<div class="bg-scene">
+  <div class="stars"></div>
+</div>
+
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">CAIRO &middot; SARIMAX + NASA POWER &middot;</p>
+    <h1 class="hero-title">What's the expected weather in Cairo ?</h1>
+    <p class="hero-sub">Choose any date in the coming months and see the prediction.</p>
+  </header>
+
+  <section class="card-glass">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <label for="{{ form.target_date.id_for_label }}" class="field-label">{{ form.target_date.label }}</label>
+      {{ form.target_date }}
+      {% if form.target_date.errors %}
+        <div class="field-error">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+          <span>{{ form.target_date.errors.0 }}</span>
+        </div>
+      {% endif %}
+      <button type="submit" class="btn-predict">
+        <span>Get Forecast</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+    <p class="range-hint">Forecasts are available from {{ min_date|date:"Y-m-d" }} To {{ max_date|date:"Y-m-d" }}</p>
+  </section>
+
+  {% if result %}
+  <section class="result-card reveal">
+    <div class="result-icon icon-{{ result.category }}">
+      {% if result.category == 'hot' %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.3"/><path d="M12 2.5v2.6M12 18.9v2.6M4.2 4.2l1.9 1.9M17.9 17.9l1.9 1.9M2.5 12h2.6M18.9 12h2.6M4.2 19.8l1.9-1.9M17.9 6.1l1.9-1.9"/></svg>
+      {% elif result.category == 'cold' %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2v20M4.9 4.9l14.2 14.2M4.9 19.1 19.1 4.9M2 12h20M7 4l-1 3 3-1M7 20l-1-3 3 1M17 4l1 3-3-1M17 20l1-3-3 1M4 8l3 1-1 3M4 16l3-1-1-3M20 8l-3 1 1 3M20 16l-3-1 1 3"/></svg>
+      {% else %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 7.1 9.2 4 4 0 0 0 7 18Z"/></svg>
+      {% endif %}
+    </div>
+    <p class="result-date">{{ result.target_date_display }} &middot; {{ result.steps_ahead }} days after the last known data point</p>
+    <p class="result-temp">{{ result.predicted }}<span>°C</span></p>
+    <p class="result-label label-{{ result.category }}">{{ result.category_label }}</p>
+    <p class="result-ci">95% confidence range: {{ result.ci_low }}° to {{ result.ci_high }}°</p>
+
+    <div class="temp-scale">
+      <div class="scale-track"></div>
+      <div class="scale-band" style="left: {{ result.ci_low_pct }}%; width: {{ result.ci_width_pct }}%;"></div>
+      <div class="scale-marker" style="left: {{ result.predicted_pct }}%;">
+        <span class="marker-dot"></span>
+        <span class="marker-value">{{ result.predicted }}°</span>
+      </div>
+      <div class="scale-labels">
+        <span>{{ dataset_min }}°C coldest recorded day</span>
+        <span>{{ dataset_max }}°C hottest recorded day</span>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <footer class="page-footer">
+    <p>The model was trained on NASA POWER data from 2022 to 2023 for the city of Cairo. Forecasts are approximate and become less accurate the further out they are from the last known data.</p>
+  </footer>
+</main>
+
+</body>
+</html>

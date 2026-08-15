@@ -1,0 +1,77 @@
+{
+    "feature_columns": [
+        "relative_humidity",
+        "precipitation",
+        "wind_speed",
+        "cloud_cover",
+        "surface_pressure",
+        "hour",
+        "month",
+        "hour_sin",
+        "hour_cos",
+        "month_sin",
+        "month_cos"
+    ],
+    "target_column": "temperature",
+    "feature_ranges": {
+        "relative_humidity": {
+            "min": 3.0,
+            "max": 100.0,
+            "mean": 50.61,
+            "std": 23.33
+        },
+        "precipitation": {
+            "min": 0.0,
+            "max": 6.4,
+            "mean": 0.0,
+            "std": 0.1
+        },
+        "wind_speed": {
+            "min": 0.0,
+            "max": 36.2,
+            "mean": 10.66,
+            "std": 4.74
+        },
+        "cloud_cover": {
+            "min": 0.0,
+            "max": 100.0,
+            "mean": 19.79,
+            "std": 33.41
+        },
+        "surface_pressure": {
+            "min": 998.3,
+            "max": 1027.7,
+            "mean": 1011.15,
+            "std": 5.2
+        },
+        "temperature": {
+            "min": 3.7,
+            "max": 44.7,
+            "mean": 23.3,
+            "std": 8.17
+        }
+    },
+    "dataset_info": {
+        "source": "Open-Meteo Historical Weather API",
+        "location": "Cairo, Egypt (30.0444\u00b0N, 31.2357\u00b0E)",
+        "period": "2022-01-01 to 2023-12-31",
+        "frequency": "Hourly",
+        "total_records": 17520
+    },
+    "models": {
+        "gradient_boosting": {
+            "model": "Gradient Boosting",
+            "MAE": 2.0126,
+            "RMSE": 2.5801,
+            "R2": 0.8272,
+            "MAPE": 9.28
+        },
+        "random_forest": {
+            "model": "Random Forest",
+            "MAE": 2.0957,
+            "RMSE": 2.7373,
+            "R2": 0.8055,
+            "MAPE": 9.69
+        }
+    }
+}

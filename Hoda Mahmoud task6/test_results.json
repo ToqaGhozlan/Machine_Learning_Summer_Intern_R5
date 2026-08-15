@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-08-15T14:18:54.774316",
+  "model_info": {
+    "order": [
+      2,
+      1,
+      2
+    ],
+    "seasonal_order": [
+      0,
+      0,
+      0,
+      7
+    ],
+    "path": "outputs/Cairo/model/sarima_model.pkl"
+  },
+  "direct_predictions": {
+    "1": {
+      "prediction": 5.003534578239539,
+      "lower_ci": 1.9740977567514233,
+      "upper_ci": 8.032971399727655
+    },
+    "3": {
+      "prediction": 5.672408903552798,
+      "lower_ci": 1.0704612854813345,
+      "upper_ci": 10.274356521624261
+    },
+    "7": {
+      "prediction": 5.594630828050397,
+      "lower_ci": 0.3168899849057665,
+      "upper_ci": 10.872371671195026
+    },
+    "14": {
+      "prediction": 5.647883686637981,
+      "lower_ci": -0.7056379828894626,
+      "upper_ci": 12.001405356165424
+    },
+    "28": {
+      "prediction": 5.744927388741189,
+      "lower_ci": -2.3411391116326925,
+      "upper_ci": 13.83099388911507
+    }
+  },
+  "django_predictions": {
+    "1": {
+      "prediction": 5.0,
+      "lower_ci": 1.97,
+      "upper_ci": 8.03
+    },
+    "3": {
+      "prediction": 5.67,
+      "lower_ci": 1.07,
+      "upper_ci": 10.27
+    },
+    "7": {
+      "prediction": 5.59,
+      "lower_ci": 0.32,
+      "upper_ci": 10.87
+    },
+    "14": {
+      "prediction": 5.65,
+      "lower_ci": null,
+      "upper_ci": 12.0
+    },
+    "28": {
+      "prediction": 5.74,
+      "lower_ci": null,
+      "upper_ci": 13.83
+    }
+  },
+  "validation_passed": true
+}

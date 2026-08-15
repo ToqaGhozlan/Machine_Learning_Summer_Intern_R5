@@ -1,0 +1,1 @@
+"""Weather Prediction Django Project"""
