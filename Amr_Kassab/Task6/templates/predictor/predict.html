@@ -1,0 +1,350 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cairo Weather Temperature Predictor — Enter current weather conditions and get an AI-powered temperature prediction using machine learning models trained on 2 years of meteorological data.">
+    <title>Cairo Weather Predictor — AI Temperature Forecast</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo-group">
+                <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="14" r="7" stroke="currentColor" stroke-width="2"/>
+                    <line x1="16" y1="3" x2="16" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="16" y1="23" x2="16" y2="25" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="7" y1="14" x2="5" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="27" y1="14" x2="25" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="9.3" y1="7.3" x2="7.9" y2="5.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="24.1" y1="22.1" x2="22.7" y2="20.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="22.7" y1="7.3" x2="24.1" y2="5.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="7.9" y1="22.1" x2="9.3" y2="20.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M10 28 Q16 30 22 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    <path d="M12 30 Q16 31.5 20 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div>
+                    <h1 class="site-title">Cairo Weather Predictor</h1>
+                    <p class="site-subtitle">ML-powered temperature forecasting</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <span class="badge">Task 6</span>
+                <span class="badge badge-outline">NiCST ML Mentorship</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero-section">
+        <p class="hero-description">
+            Enter current weather conditions below and our machine learning model will predict 
+            the temperature in Cairo, Egypt. Trained on <strong>17,520 hourly records</strong> 
+            spanning 2022–2023 from the Open-Meteo Historical Weather API.
+        </p>
+    </section>
+
+    <div class="main-grid">
+        <div class="form-column">
+            <form method="post" class="prediction-form" id="prediction-form" novalidate>
+                {% csrf_token %}
+
+                <div class="form-card">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                            <circle cx="12" cy="12" r="4"/>
+                        </svg>
+                        <h2 class="card-title">Atmospheric Conditions</h2>
+                    </div>
+
+                    <div class="fields-grid">
+                        <div class="field-group{% if form.relative_humidity.errors %} field-error{% endif %}">
+                            <label for="id_relative_humidity" class="field-label">
+                                Relative Humidity
+                                <span class="field-unit">%</span>
+                            </label>
+                            {{ form.relative_humidity }}
+                            {% if form.relative_humidity.errors %}
+                                <span class="error-text">{{ form.relative_humidity.errors.0 }}</span>
+                            {% else %}
+                                <span class="help-text">{{ form.relative_humidity.help_text }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="field-group{% if form.precipitation.errors %} field-error{% endif %}">
+                            <label for="id_precipitation" class="field-label">
+                                Precipitation
+                                <span class="field-unit">mm</span>
+                            </label>
+                            {{ form.precipitation }}
+                            {% if form.precipitation.errors %}
+                                <span class="error-text">{{ form.precipitation.errors.0 }}</span>
+                            {% else %}
+                                <span class="help-text">{{ form.precipitation.help_text }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="field-group{% if form.wind_speed.errors %} field-error{% endif %}">
+                            <label for="id_wind_speed" class="field-label">
+                                Wind Speed
+                                <span class="field-unit">km/h</span>
+                            </label>
+                            {{ form.wind_speed }}
+                            {% if form.wind_speed.errors %}
+                                <span class="error-text">{{ form.wind_speed.errors.0 }}</span>
+                            {% else %}
+                                <span class="help-text">{{ form.wind_speed.help_text }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="field-group{% if form.cloud_cover.errors %} field-error{% endif %}">
+                            <label for="id_cloud_cover" class="field-label">
+                                Cloud Cover
+                                <span class="field-unit">%</span>
+                            </label>
+                            {{ form.cloud_cover }}
+                            {% if form.cloud_cover.errors %}
+                                <span class="error-text">{{ form.cloud_cover.errors.0 }}</span>
+                            {% else %}
+                                <span class="help-text">{{ form.cloud_cover.help_text }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="field-group field-full{% if form.surface_pressure.errors %} field-error{% endif %}">
+                            <label for="id_surface_pressure" class="field-label">
+                                Surface Pressure
+                                <span class="field-unit">hPa</span>
+                            </label>
+                            {{ form.surface_pressure }}
+                            {% if form.surface_pressure.errors %}
+                                <span class="error-text">{{ form.surface_pressure.errors.0 }}</span>
+                            {% else %}
+                                <span class="help-text">{{ form.surface_pressure.help_text }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        <h2 class="card-title">Time & Model</h2>
+                    </div>
+
+                    <div class="fields-grid">
+                        <div class="field-group{% if form.hour.errors %} field-error{% endif %}">
+                            <label for="id_hour" class="field-label">Hour of Day</label>
+                            {{ form.hour }}
+                            {% if form.hour.errors %}
+                                <span class="error-text">{{ form.hour.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="field-group{% if form.month.errors %} field-error{% endif %}">
+                            <label for="id_month" class="field-label">Month</label>
+                            {{ form.month }}
+                            {% if form.month.errors %}
+                                <span class="error-text">{{ form.month.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="field-group field-full{% if form.model_choice.errors %} field-error{% endif %}">
+                            <label for="id_model_choice" class="field-label">Prediction Model</label>
+                            {{ form.model_choice }}
+                            {% if form.model_choice.errors %}
+                                <span class="error-text">{{ form.model_choice.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    Generate Prediction
+                </button>
+            </form>
+        </div>
+
+        <div class="result-column">
+            {% if prediction and not prediction.error %}
+            <div class="result-panel result-visible" id="result-panel">
+                <div class="result-header">
+                    <h2 class="result-title">Prediction Result</h2>
+                    <span class="result-model-badge">{{ prediction.model_used|title }}</span>
+                </div>
+
+                <div class="temperature-display">
+                    <div class="temp-icon-container">
+                        {% if prediction.temperature >= 35 %}
+                        <svg class="temp-icon temp-hot" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="10" fill="#ef4444" opacity="0.15"/>
+                            <circle cx="24" cy="24" r="8" stroke="#ef4444" stroke-width="2.5"/>
+                            <line x1="24" y1="8" x2="24" y2="12" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="24" y1="36" x2="24" y2="40" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="8" y1="24" x2="12" y2="24" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="36" y1="24" x2="40" y2="24" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        {% elif prediction.temperature >= 20 %}
+                        <svg class="temp-icon temp-warm" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="10" fill="#f59e0b" opacity="0.15"/>
+                            <circle cx="24" cy="24" r="8" stroke="#f59e0b" stroke-width="2.5"/>
+                            <path d="M18 14 Q24 10 30 14" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M16 38 Q24 42 32 38" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        {% elif prediction.temperature >= 10 %}
+                        <svg class="temp-icon temp-mild" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="10" fill="#3b82f6" opacity="0.1"/>
+                            <path d="M20 14 Q18 20 20 26 Q22 32 20 38" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M28 10 Q26 16 28 22 Q30 28 28 34" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        {% else %}
+                        <svg class="temp-icon temp-cold" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="10" fill="#06b6d4" opacity="0.1"/>
+                            <line x1="24" y1="14" x2="24" y2="34" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="14" y1="24" x2="34" y2="24" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="17" y1="17" x2="31" y2="31" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="31" y1="17" x2="17" y2="31" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="temp-value-group">
+                        <span class="temp-value">{{ prediction.temperature }}°C</span>
+                        <span class="temp-range">{{ prediction.confidence_low }}°C — {{ prediction.confidence_high }}°C</span>
+                        <span class="temp-range-label">95% confidence interval</span>
+                    </div>
+                </div>
+
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Model Accuracy (MAE)</span>
+                        <span class="detail-value">±{{ prediction.model_mae }}°C</span>
+                    </div>
+                    {% if prediction.model_r2 %}
+                    <div class="detail-row">
+                        <span class="detail-label">R² Score</span>
+                        <span class="detail-value">{{ prediction.model_r2 }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="detail-row">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value">Cairo, Egypt</span>
+                    </div>
+                </div>
+
+                <div class="input-summary">
+                    <h3 class="summary-title">Input Summary</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Humidity</span>
+                            <span class="summary-val">{{ prediction.input_data.relative_humidity }}%</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Precipitation</span>
+                            <span class="summary-val">{{ prediction.input_data.precipitation }} mm</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Wind</span>
+                            <span class="summary-val">{{ prediction.input_data.wind_speed }} km/h</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Cloud</span>
+                            <span class="summary-val">{{ prediction.input_data.cloud_cover }}%</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Pressure</span>
+                            <span class="summary-val">{{ prediction.input_data.surface_pressure }} hPa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% elif prediction and prediction.error %}
+            <div class="result-panel result-error result-visible" id="result-panel">
+                <div class="error-content">
+                    <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    <h3>Prediction Error</h3>
+                    <p>{{ prediction.error }}</p>
+                </div>
+            </div>
+
+            {% else %}
+            <div class="result-panel result-placeholder" id="result-panel">
+                <div class="placeholder-content">
+                    <svg class="placeholder-icon" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="26" r="12" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                        <path d="M20 26 L12 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+                        <path d="M52 26 L44 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+                        <path d="M32 8 L32 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+                        <path d="M23 17 L19 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+                        <path d="M41 17 L45 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.2"/>
+                        <rect x="27" y="42" width="10" height="14" rx="5" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                        <line x1="32" y1="48" x2="32" y2="52" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+                    </svg>
+                    <h3 class="placeholder-title">Awaiting Input</h3>
+                    <p class="placeholder-text">Fill in the weather conditions on the left and click <strong>Generate Prediction</strong> to see the forecasted temperature.</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="metrics-card">
+                <h3 class="metrics-title">Model Performance</h3>
+                <div class="metrics-table-wrap">
+                    <table class="metrics-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>MAE (°C)</th>
+                                <th>RMSE (°C)</th>
+                                <th>R²</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, val in model_metrics.items %}
+                            <tr>
+                                <td class="model-name-cell">{{ val.model }}</td>
+                                <td>{{ val.MAE }}</td>
+                                <td>{{ val.RMSE }}</td>
+                                <td>{{ val.R2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="metrics-footnote">
+                    Trained on {{ dataset_info.total_records|default:"17,520" }} hourly records · 
+                    {{ dataset_info.location|default:"Cairo, Egypt" }} · 
+                    {{ dataset_info.period|default:"2022–2023" }}
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p>NiCST ML Mentorship Program · Task 6: Django Deployment · Weather Prediction Model</p>
+        <p class="footer-sub">Data sourced from Open-Meteo Historical Weather API · Cairo, Egypt (30.04°N, 31.24°E)</p>
+    </div>
+</footer>
+
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
