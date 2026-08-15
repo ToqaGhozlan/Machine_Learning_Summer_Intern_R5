@@ -1,0 +1,221 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Weather Prediction
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="{% static 'predictor/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="page">
+
+
+    <!-- HEADER -->
+
+    <header class="hero">
+
+        <div>
+
+            <span class="eyebrow">
+                TASK 6 · DJANGO
+            </span>
+
+
+            <h1>
+                Weather Prediction
+            </h1>
+
+
+            <p>
+                Enter current weather conditions
+                and get an instant model prediction.
+            </p>
+
+        </div>
+
+
+        <div class="weather-icon">
+            ☁️
+        </div>
+
+    </header>
+
+
+
+    <!-- FORM -->
+
+    <section class="card">
+
+
+        <div class="section-title">
+
+            <h2>
+                Weather Inputs
+            </h2>
+
+            <span>
+                All fields are required
+            </span>
+
+        </div>
+
+
+
+        <form
+            method="post"
+            novalidate
+        >
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="alert error">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+
+            <div class="grid">
+
+
+                {% for field in form %}
+
+
+                    <div class="field">
+
+
+                        <label
+                            for="{{ field.id_for_label }}"
+                        >
+
+                            {{ field.label }}
+
+                        </label>
+
+
+                        {{ field }}
+
+
+                        {% for error in field.errors %}
+
+                            <div class="field-error">
+
+                                {{ error }}
+
+                            </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+
+            <button type="submit">
+
+                Predict Weather →
+
+            </button>
+
+
+        </form>
+
+
+    </section>
+
+
+
+    <!-- RESULT -->
+
+    {% if prediction is not None %}
+
+    <section class="result">
+
+
+        <div class="result-icon">
+
+            🌡️
+
+        </div>
+
+
+        <div>
+
+            <span class="result-label">
+
+                MODEL PREDICTION
+
+            </span>
+
+
+            <div class="result-value">
+
+                {{ prediction|floatformat:2 }} °C
+
+            </div>
+
+
+            <p>
+
+                Prediction returned successfully
+                by the serialized model.
+
+            </p>
+
+        </div>
+
+
+    </section>
+
+    {% endif %}
+
+
+
+    <footer>
+
+        Django · Model Inference ·
+        Input Validation · Responsive UI
+
+    </footer>
+
+
+</main>
+
+
+</body>
+
+</html>
