@@ -1,0 +1,923 @@
+{
+  "model": "SARIMAX(2,1,2) + Fourier(order=3)",
+  "baseline": "Persistence (last observed temperature)",
+  "holdout_days": 180,
+  "training_start": "2021-01-01",
+  "training_end": "2025-07-04",
+  "test_start": "2025-07-05",
+  "test_end": "2025-12-31",
+  "metrics": {
+    "sarimax": {
+      "mae": 1.023,
+      "rmse": 1.302,
+      "mape": 5.49
+    },
+    "baseline": {
+      "mae": 7.55,
+      "rmse": 9.469,
+      "mape": 50.11
+    }
+  },
+  "series": [
+    {
+      "date": "2025-07-05",
+      "actual": 27.86,
+      "predicted": 27.69
+    },
+    {
+      "date": "2025-07-06",
+      "actual": 29.56,
+      "predicted": 27.81
+    },
+    {
+      "date": "2025-07-07",
+      "actual": 27.83,
+      "predicted": 27.73
+    },
+    {
+      "date": "2025-07-08",
+      "actual": 27.18,
+      "predicted": 27.84
+    },
+    {
+      "date": "2025-07-09",
+      "actual": 27.45,
+      "predicted": 27.77
+    },
+    {
+      "date": "2025-07-10",
+      "actual": 29.78,
+      "predicted": 27.87
+    },
+    {
+      "date": "2025-07-11",
+      "actual": 28.83,
+      "predicted": 27.81
+    },
+    {
+      "date": "2025-07-12",
+      "actual": 27.64,
+      "predicted": 27.89
+    },
+    {
+      "date": "2025-07-13",
+      "actual": 27.84,
+      "predicted": 27.83
+    },
+    {
+      "date": "2025-07-14",
+      "actual": 26.12,
+      "predicted": 27.9
+    },
+    {
+      "date": "2025-07-15",
+      "actual": 28.67,
+      "predicted": 27.85
+    },
+    {
+      "date": "2025-07-16",
+      "actual": 25.87,
+      "predicted": 27.9
+    },
+    {
+      "date": "2025-07-17",
+      "actual": 29.14,
+      "predicted": 27.85
+    },
+    {
+      "date": "2025-07-18",
+      "actual": 28.32,
+      "predicted": 27.89
+    },
+    {
+      "date": "2025-07-19",
+      "actual": 31.25,
+      "predicted": 27.84
+    },
+    {
+      "date": "2025-07-20",
+      "actual": 26.71,
+      "predicted": 27.87
+    },
+    {
+      "date": "2025-07-21",
+      "actual": 27.99,
+      "predicted": 27.83
+    },
+    {
+      "date": "2025-07-22",
+      "actual": 30.45,
+      "predicted": 27.84
+    },
+    {
+      "date": "2025-07-23",
+      "actual": 29.64,
+      "predicted": 27.8
+    },
+    {
+      "date": "2025-07-24",
+      "actual": 27.17,
+      "predicted": 27.8
+    },
+    {
+      "date": "2025-07-25",
+      "actual": 28.34,
+      "predicted": 27.76
+    },
+    {
+      "date": "2025-07-26",
+      "actual": 28.03,
+      "predicted": 27.76
+    },
+    {
+      "date": "2025-07-27",
+      "actual": 28.37,
+      "predicted": 27.71
+    },
+    {
+      "date": "2025-07-28",
+      "actual": 28.09,
+      "predicted": 27.7
+    },
+    {
+      "date": "2025-07-29",
+      "actual": 27.82,
+      "predicted": 27.65
+    },
+    {
+      "date": "2025-07-30",
+      "actual": 25.83,
+      "predicted": 27.63
+    },
+    {
+      "date": "2025-07-31",
+      "actual": 28.04,
+      "predicted": 27.58
+    },
+    {
+      "date": "2025-08-01",
+      "actual": 28.41,
+      "predicted": 27.55
+    },
+    {
+      "date": "2025-08-02",
+      "actual": 27.49,
+      "predicted": 27.5
+    },
+    {
+      "date": "2025-08-03",
+      "actual": 25.64,
+      "predicted": 27.46
+    },
+    {
+      "date": "2025-08-04",
+      "actual": 28.98,
+      "predicted": 27.4
+    },
+    {
+      "date": "2025-08-05",
+      "actual": 28.12,
+      "predicted": 27.37
+    },
+    {
+      "date": "2025-08-06",
+      "actual": 26.65,
+      "predicted": 27.3
+    },
+    {
+      "date": "2025-08-07",
+      "actual": 27.18,
+      "predicted": 27.26
+    },
+    {
+      "date": "2025-08-08",
+      "actual": 25.53,
+      "predicted": 27.19
+    },
+    {
+      "date": "2025-08-09",
+      "actual": 26.09,
+      "predicted": 27.14
+    },
+    {
+      "date": "2025-08-10",
+      "actual": 26.67,
+      "predicted": 27.07
+    },
+    {
+      "date": "2025-08-11",
+      "actual": 28.9,
+      "predicted": 27.01
+    },
+    {
+      "date": "2025-08-12",
+      "actual": 26.41,
+      "predicted": 26.94
+    },
+    {
+      "date": "2025-08-13",
+      "actual": 28.0,
+      "predicted": 26.88
+    },
+    {
+      "date": "2025-08-14",
+      "actual": 26.4,
+      "predicted": 26.8
+    },
+    {
+      "date": "2025-08-15",
+      "actual": 27.35,
+      "predicted": 26.73
+    },
+    {
+      "date": "2025-08-16",
+      "actual": 26.77,
+      "predicted": 26.65
+    },
+    {
+      "date": "2025-08-17",
+      "actual": 28.01,
+      "predicted": 26.58
+    },
+    {
+      "date": "2025-08-18",
+      "actual": 26.11,
+      "predicted": 26.49
+    },
+    {
+      "date": "2025-08-19",
+      "actual": 24.68,
+      "predicted": 26.41
+    },
+    {
+      "date": "2025-08-20",
+      "actual": 24.84,
+      "predicted": 26.33
+    },
+    {
+      "date": "2025-08-21",
+      "actual": 25.86,
+      "predicted": 26.24
+    },
+    {
+      "date": "2025-08-22",
+      "actual": 24.84,
+      "predicted": 26.15
+    },
+    {
+      "date": "2025-08-23",
+      "actual": 26.91,
+      "predicted": 26.06
+    },
+    {
+      "date": "2025-08-24",
+      "actual": 25.68,
+      "predicted": 25.97
+    },
+    {
+      "date": "2025-08-25",
+      "actual": 29.28,
+      "predicted": 25.87
+    },
+    {
+      "date": "2025-08-26",
+      "actual": 23.84,
+      "predicted": 25.77
+    },
+    {
+      "date": "2025-08-27",
+      "actual": 26.27,
+      "predicted": 25.68
+    },
+    {
+      "date": "2025-08-28",
+      "actual": 24.44,
+      "predicted": 25.57
+    },
+    {
+      "date": "2025-08-29",
+      "actual": 25.17,
+      "predicted": 25.47
+    },
+    {
+      "date": "2025-08-30",
+      "actual": 25.89,
+      "predicted": 25.37
+    },
+    {
+      "date": "2025-08-31",
+      "actual": 22.58,
+      "predicted": 25.26
+    },
+    {
+      "date": "2025-09-01",
+      "actual": 25.8,
+      "predicted": 25.15
+    },
+    {
+      "date": "2025-09-02",
+      "actual": 27.86,
+      "predicted": 25.04
+    },
+    {
+      "date": "2025-09-03",
+      "actual": 24.69,
+      "predicted": 24.93
+    },
+    {
+      "date": "2025-09-04",
+      "actual": 25.51,
+      "predicted": 24.82
+    },
+    {
+      "date": "2025-09-05",
+      "actual": 26.39,
+      "predicted": 24.7
+    },
+    {
+      "date": "2025-09-06",
+      "actual": 24.73,
+      "predicted": 24.59
+    },
+    {
+      "date": "2025-09-07",
+      "actual": 24.07,
+      "predicted": 24.47
+    },
+    {
+      "date": "2025-09-08",
+      "actual": 21.75,
+      "predicted": 24.35
+    },
+    {
+      "date": "2025-09-09",
+      "actual": 25.43,
+      "predicted": 24.23
+    },
+    {
+      "date": "2025-09-10",
+      "actual": 24.33,
+      "predicted": 24.11
+    },
+    {
+      "date": "2025-09-11",
+      "actual": 23.04,
+      "predicted": 23.98
+    },
+    {
+      "date": "2025-09-12",
+      "actual": 24.4,
+      "predicted": 23.86
+    },
+    {
+      "date": "2025-09-13",
+      "actual": 23.35,
+      "predicted": 23.73
+    },
+    {
+      "date": "2025-09-14",
+      "actual": 23.3,
+      "predicted": 23.61
+    },
+    {
+      "date": "2025-09-15",
+      "actual": 24.65,
+      "predicted": 23.48
+    },
+    {
+      "date": "2025-09-16",
+      "actual": 21.99,
+      "predicted": 23.35
+    },
+    {
+      "date": "2025-09-17",
+      "actual": 24.96,
+      "predicted": 23.22
+    },
+    {
+      "date": "2025-09-18",
+      "actual": 21.65,
+      "predicted": 23.09
+    },
+    {
+      "date": "2025-09-19",
+      "actual": 22.48,
+      "predicted": 22.96
+    },
+    {
+      "date": "2025-09-20",
+      "actual": 25.71,
+      "predicted": 22.82
+    },
+    {
+      "date": "2025-09-21",
+      "actual": 24.54,
+      "predicted": 22.69
+    },
+    {
+      "date": "2025-09-22",
+      "actual": 23.07,
+      "predicted": 22.55
+    },
+    {
+      "date": "2025-09-23",
+      "actual": 21.58,
+      "predicted": 22.42
+    },
+    {
+      "date": "2025-09-24",
+      "actual": 21.98,
+      "predicted": 22.28
+    },
+    {
+      "date": "2025-09-25",
+      "actual": 22.63,
+      "predicted": 22.14
+    },
+    {
+      "date": "2025-09-26",
+      "actual": 22.45,
+      "predicted": 22.0
+    },
+    {
+      "date": "2025-09-27",
+      "actual": 22.14,
+      "predicted": 21.87
+    },
+    {
+      "date": "2025-09-28",
+      "actual": 22.08,
+      "predicted": 21.73
+    },
+    {
+      "date": "2025-09-29",
+      "actual": 21.7,
+      "predicted": 21.59
+    },
+    {
+      "date": "2025-09-30",
+      "actual": 19.96,
+      "predicted": 21.45
+    },
+    {
+      "date": "2025-10-01",
+      "actual": 21.03,
+      "predicted": 21.31
+    },
+    {
+      "date": "2025-10-02",
+      "actual": 22.75,
+      "predicted": 21.16
+    },
+    {
+      "date": "2025-10-03",
+      "actual": 19.64,
+      "predicted": 21.02
+    },
+    {
+      "date": "2025-10-04",
+      "actual": 21.03,
+      "predicted": 20.88
+    },
+    {
+      "date": "2025-10-05",
+      "actual": 20.06,
+      "predicted": 20.74
+    },
+    {
+      "date": "2025-10-06",
+      "actual": 21.13,
+      "predicted": 20.6
+    },
+    {
+      "date": "2025-10-07",
+      "actual": 20.34,
+      "predicted": 20.45
+    },
+    {
+      "date": "2025-10-08",
+      "actual": 22.62,
+      "predicted": 20.31
+    },
+    {
+      "date": "2025-10-09",
+      "actual": 21.21,
+      "predicted": 20.17
+    },
+    {
+      "date": "2025-10-10",
+      "actual": 18.7,
+      "predicted": 20.03
+    },
+    {
+      "date": "2025-10-11",
+      "actual": 21.13,
+      "predicted": 19.88
+    },
+    {
+      "date": "2025-10-12",
+      "actual": 19.11,
+      "predicted": 19.74
+    },
+    {
+      "date": "2025-10-13",
+      "actual": 19.22,
+      "predicted": 19.6
+    },
+    {
+      "date": "2025-10-14",
+      "actual": 20.23,
+      "predicted": 19.46
+    },
+    {
+      "date": "2025-10-15",
+      "actual": 19.04,
+      "predicted": 19.31
+    },
+    {
+      "date": "2025-10-16",
+      "actual": 20.7,
+      "predicted": 19.17
+    },
+    {
+      "date": "2025-10-17",
+      "actual": 18.38,
+      "predicted": 19.03
+    },
+    {
+      "date": "2025-10-18",
+      "actual": 18.44,
+      "predicted": 18.89
+    },
+    {
+      "date": "2025-10-19",
+      "actual": 18.25,
+      "predicted": 18.75
+    },
+    {
+      "date": "2025-10-20",
+      "actual": 18.22,
+      "predicted": 18.6
+    },
+    {
+      "date": "2025-10-21",
+      "actual": 20.24,
+      "predicted": 18.46
+    },
+    {
+      "date": "2025-10-22",
+      "actual": 19.48,
+      "predicted": 18.32
+    },
+    {
+      "date": "2025-10-23",
+      "actual": 20.74,
+      "predicted": 18.18
+    },
+    {
+      "date": "2025-10-24",
+      "actual": 21.33,
+      "predicted": 18.04
+    },
+    {
+      "date": "2025-10-25",
+      "actual": 16.9,
+      "predicted": 17.91
+    },
+    {
+      "date": "2025-10-26",
+      "actual": 18.18,
+      "predicted": 17.77
+    },
+    {
+      "date": "2025-10-27",
+      "actual": 16.42,
+      "predicted": 17.63
+    },
+    {
+      "date": "2025-10-28",
+      "actual": 16.8,
+      "predicted": 17.49
+    },
+    {
+      "date": "2025-10-29",
+      "actual": 16.85,
+      "predicted": 17.35
+    },
+    {
+      "date": "2025-10-30",
+      "actual": 16.15,
+      "predicted": 17.22
+    },
+    {
+      "date": "2025-10-31",
+      "actual": 16.02,
+      "predicted": 17.08
+    },
+    {
+      "date": "2025-11-01",
+      "actual": 17.06,
+      "predicted": 16.95
+    },
+    {
+      "date": "2025-11-02",
+      "actual": 15.53,
+      "predicted": 16.82
+    },
+    {
+      "date": "2025-11-03",
+      "actual": 18.07,
+      "predicted": 16.68
+    },
+    {
+      "date": "2025-11-04",
+      "actual": 15.64,
+      "predicted": 16.55
+    },
+    {
+      "date": "2025-11-05",
+      "actual": 20.35,
+      "predicted": 16.42
+    },
+    {
+      "date": "2025-11-06",
+      "actual": 15.98,
+      "predicted": 16.29
+    },
+    {
+      "date": "2025-11-07",
+      "actual": 16.52,
+      "predicted": 16.16
+    },
+    {
+      "date": "2025-11-08",
+      "actual": 14.61,
+      "predicted": 16.03
+    },
+    {
+      "date": "2025-11-09",
+      "actual": 18.38,
+      "predicted": 15.9
+    },
+    {
+      "date": "2025-11-10",
+      "actual": 17.49,
+      "predicted": 15.78
+    },
+    {
+      "date": "2025-11-11",
+      "actual": 16.29,
+      "predicted": 15.65
+    },
+    {
+      "date": "2025-11-12",
+      "actual": 14.02,
+      "predicted": 15.53
+    },
+    {
+      "date": "2025-11-13",
+      "actual": 15.92,
+      "predicted": 15.4
+    },
+    {
+      "date": "2025-11-14",
+      "actual": 14.06,
+      "predicted": 15.28
+    },
+    {
+      "date": "2025-11-15",
+      "actual": 17.29,
+      "predicted": 15.16
+    },
+    {
+      "date": "2025-11-16",
+      "actual": 16.32,
+      "predicted": 15.04
+    },
+    {
+      "date": "2025-11-17",
+      "actual": 15.27,
+      "predicted": 14.92
+    },
+    {
+      "date": "2025-11-18",
+      "actual": 11.86,
+      "predicted": 14.8
+    },
+    {
+      "date": "2025-11-19",
+      "actual": 13.63,
+      "predicted": 14.69
+    },
+    {
+      "date": "2025-11-20",
+      "actual": 15.68,
+      "predicted": 14.57
+    },
+    {
+      "date": "2025-11-21",
+      "actual": 16.25,
+      "predicted": 14.46
+    },
+    {
+      "date": "2025-11-22",
+      "actual": 16.0,
+      "predicted": 14.35
+    },
+    {
+      "date": "2025-11-23",
+      "actual": 12.37,
+      "predicted": 14.23
+    },
+    {
+      "date": "2025-11-24",
+      "actual": 14.72,
+      "predicted": 14.12
+    },
+    {
+      "date": "2025-11-25",
+      "actual": 15.54,
+      "predicted": 14.02
+    },
+    {
+      "date": "2025-11-26",
+      "actual": 11.95,
+      "predicted": 13.91
+    },
+    {
+      "date": "2025-11-27",
+      "actual": 13.99,
+      "predicted": 13.8
+    },
+    {
+      "date": "2025-11-28",
+      "actual": 14.25,
+      "predicted": 13.7
+    },
+    {
+      "date": "2025-11-29",
+      "actual": 13.4,
+      "predicted": 13.6
+    },
+    {
+      "date": "2025-11-30",
+      "actual": 11.28,
+      "predicted": 13.5
+    },
+    {
+      "date": "2025-12-01",
+      "actual": 13.17,
+      "predicted": 13.4
+    },
+    {
+      "date": "2025-12-02",
+      "actual": 13.06,
+      "predicted": 13.3
+    },
+    {
+      "date": "2025-12-03",
+      "actual": 13.2,
+      "predicted": 13.2
+    },
+    {
+      "date": "2025-12-04",
+      "actual": 12.57,
+      "predicted": 13.11
+    },
+    {
+      "date": "2025-12-05",
+      "actual": 12.63,
+      "predicted": 13.02
+    },
+    {
+      "date": "2025-12-06",
+      "actual": 13.06,
+      "predicted": 12.92
+    },
+    {
+      "date": "2025-12-07",
+      "actual": 13.6,
+      "predicted": 12.84
+    },
+    {
+      "date": "2025-12-08",
+      "actual": 12.54,
+      "predicted": 12.75
+    },
+    {
+      "date": "2025-12-09",
+      "actual": 12.32,
+      "predicted": 12.66
+    },
+    {
+      "date": "2025-12-10",
+      "actual": 12.89,
+      "predicted": 12.58
+    },
+    {
+      "date": "2025-12-11",
+      "actual": 10.19,
+      "predicted": 12.49
+    },
+    {
+      "date": "2025-12-12",
+      "actual": 13.23,
+      "predicted": 12.41
+    },
+    {
+      "date": "2025-12-13",
+      "actual": 12.53,
+      "predicted": 12.34
+    },
+    {
+      "date": "2025-12-14",
+      "actual": 12.51,
+      "predicted": 12.26
+    },
+    {
+      "date": "2025-12-15",
+      "actual": 13.64,
+      "predicted": 12.18
+    },
+    {
+      "date": "2025-12-16",
+      "actual": 9.78,
+      "predicted": 12.11
+    },
+    {
+      "date": "2025-12-17",
+      "actual": 9.68,
+      "predicted": 12.04
+    },
+    {
+      "date": "2025-12-18",
+      "actual": 12.54,
+      "predicted": 11.97
+    },
+    {
+      "date": "2025-12-19",
+      "actual": 12.11,
+      "predicted": 11.9
+    },
+    {
+      "date": "2025-12-20",
+      "actual": 12.28,
+      "predicted": 11.84
+    },
+    {
+      "date": "2025-12-21",
+      "actual": 11.4,
+      "predicted": 11.78
+    },
+    {
+      "date": "2025-12-22",
+      "actual": 12.81,
+      "predicted": 11.72
+    },
+    {
+      "date": "2025-12-23",
+      "actual": 13.1,
+      "predicted": 11.66
+    },
+    {
+      "date": "2025-12-24",
+      "actual": 12.47,
+      "predicted": 11.6
+    },
+    {
+      "date": "2025-12-25",
+      "actual": 11.45,
+      "predicted": 11.55
+    },
+    {
+      "date": "2025-12-26",
+      "actual": 9.0,
+      "predicted": 11.49
+    },
+    {
+      "date": "2025-12-27",
+      "actual": 12.7,
+      "predicted": 11.44
+    },
+    {
+      "date": "2025-12-28",
+      "actual": 13.24,
+      "predicted": 11.4
+    },
+    {
+      "date": "2025-12-29",
+      "actual": 12.45,
+      "predicted": 11.35
+    },
+    {
+      "date": "2025-12-30",
+      "actual": 10.43,
+      "predicted": 11.31
+    },
+    {
+      "date": "2025-12-31",
+      "actual": 12.42,
+      "predicted": 11.27
+    }
+  ]
+}

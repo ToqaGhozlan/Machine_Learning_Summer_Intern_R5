@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algiers Weather Forecaster</title>
+    <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/fontawesome/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+    <div class="container py-4 py-md-5">
+
+        <header class="text-center mb-4 mb-md-5">
+            <div class="brand-icon mb-2"><i class="fa-solid fa-cloud-sun"></i></div>
+            <h1 class="app-title">Algiers Weather Forecaster</h1>
+            <p class="app-subtitle">
+                Pick a future date and get a daily temperature forecast from a SARIMAX
+                time-series model trained on {{ first_train_date|slice:":4" }}&ndash;{{ last_train_date|slice:":4" }}
+                history for {{ region }}.
+            </p>
+        </header>
+
+        <div class="row justify-content-center g-4">
+            <div class="col-lg-6">
+                <div class="card shadow-sm form-card">
+                    <div class="card-body p-4">
+                        <h2 class="h5 card-heading mb-3">
+                            <i class="fa-regular fa-calendar-days me-2"></i>Choose a date
+                        </h2>
+
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ form.target_date.id_for_label }}" class="form-label">
+                                    {{ form.target_date.label }}
+                                </label>
+                                {{ form.target_date }}
+                                <div class="form-text">
+                                    Valid range: {{ min_date }} &rarr; {{ max_date }}
+                                    (model trained through {{ last_train_date }})
+                                </div>
+                                {% if form.target_date.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        <i class="fa-solid fa-circle-exclamation me-1"></i>
+                                        {{ form.target_date.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Get Forecast
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                {% if result %}
+                <div class="card shadow-sm result-card mt-4 {{ category.bg_class }}">
+                    <div class="card-body p-4 text-center">
+                        <div class="result-icon mb-2">{{ category.icon }}</div>
+                        <div class="result-temp {{ category.css_class }}">
+                            {{ result.predicted_temp_c }}&deg;C
+                        </div>
+                        <div class="result-label {{ category.css_class }} fw-semibold mb-2">
+                            {{ category.label }}
+                        </div>
+                        <p class="mb-1 text-body-secondary">
+                            Forecast for <strong>{{ result.target_date|date:"l, F j, Y" }}</strong>
+                            ({{ result.days_ahead }} day{{ result.days_ahead|pluralize }} ahead)
+                        </p>
+                        <p class="mb-0 text-body-secondary small">
+                            95% confidence interval:
+                            <strong>{{ result.ci_lower_c }}&deg;C &ndash; {{ result.ci_upper_c }}&deg;C</strong>
+                        </p>
+                        {% if from_cache %}
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis mt-2">
+                                <i class="fa-solid fa-bolt me-1"></i>served from cache
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <h2 class="h5 card-heading mb-3">
+                            <i class="fa-solid fa-chart-line me-2"></i>Last 30 days of training data
+                        </h2>
+                        <canvas id="historyChart" height="220"></canvas>
+                        <p class="text-body-secondary small mt-3 mb-0">
+                            This chart shows actual historical readings the model was trained on
+                            (not a forecast) &mdash; context for how recent conditions compare to
+                            your selected forecast date.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if evaluation %}
+        <div class="card shadow-sm mt-4 evaluation-card">
+            <div class="card-body p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                    <div>
+                        <h2 class="h5 card-heading mb-1">
+                            <i class="fa-solid fa-chart-column me-2"></i>Model performance
+                        </h2>
+                        <p class="text-body-secondary small mb-0">
+                            Chronological holdout evaluation on the final {{ evaluation.holdout_days }} days
+                            ({{ evaluation.test_start }} &rarr; {{ evaluation.test_end }}).
+                        </p>
+                    </div>
+                    <span class="badge bg-success-subtle text-success-emphasis mt-2 mt-md-0">
+                        <i class="fa-solid fa-check me-1"></i>Evaluated on unseen data
+                    </span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="metric-box">
+                            <div class="metric-label">MAE</div>
+                            <div class="metric-value">{{ evaluation.metrics.sarimax.mae }}&deg;C</div>
+                            <div class="metric-help">Average absolute error</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-box">
+                            <div class="metric-label">RMSE</div>
+                            <div class="metric-value">{{ evaluation.metrics.sarimax.rmse }}&deg;C</div>
+                            <div class="metric-help">Penalizes larger errors</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-box">
+                            <div class="metric-label">MAPE</div>
+                            <div class="metric-value">{{ evaluation.metrics.sarimax.mape }}%</div>
+                            <div class="metric-help">Mean percentage error</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-8">
+                        <canvas id="evaluationChart" height="130"></canvas>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="baseline-box">
+                            <div class="small text-body-secondary mb-1">Baseline comparison</div>
+                            <div><strong>SARIMAX RMSE:</strong> {{ evaluation.metrics.sarimax.rmse }}&deg;C</div>
+                            <div><strong>Baseline RMSE:</strong> {{ evaluation.metrics.baseline.rmse }}&deg;C</div>
+                            <hr>
+                            <div class="small text-body-secondary">
+                                Baseline = persistence forecast (future temperature equals the last
+                                observed training value).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <footer class="text-center text-body-secondary small mt-5">
+            <i class="fa-solid fa-code me-1"></i>Model: {{ model_version }} &middot;
+            Region: {{ region }} &middot;
+            <a href="/api/forecast/?date={{ max_date }}" class="link-secondary me-3">Forecast API &rarr;</a>
+            <a href="/api/evaluation/" class="link-secondary">Evaluation API &rarr;</a>
+        </footer>
+    </div>
+</div>
+
+<script src="{% static 'vendor/chartjs/chart.umd.js' %}"></script>
+<script>
+    const historyData = {{ recent_history_json|safe }};
+    const ctx = document.getElementById('historyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: historyData.map(d => d.date),
+            datasets: [{
+                label: 'Temperature (\u00b0C)',
+                data: historyData.map(d => d.temp),
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                tension: 0.3,
+                fill: true,
+                pointRadius: 2,
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { maxTicksLimit: 6 } },
+                y: { title: { display: true, text: '\u00b0C' } },
+            },
+        },
+    });
+</script>
+{% if evaluation %}
+{{ evaluation.series|json_script:"evaluation-data" }}
+<script>
+    const evaluationData = JSON.parse(document.getElementById('evaluation-data').textContent);
+    const evalCtx = document.getElementById('evaluationChart').getContext('2d');
+    new Chart(evalCtx, {
+        type: 'line',
+        data: {
+            labels: evaluationData.map(d => d.date),
+            datasets: [
+                {
+                    label: 'Actual',
+                    data: evaluationData.map(d => d.actual),
+                    borderColor: '#198754',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.2,
+                },
+                {
+                    label: 'SARIMAX predicted',
+                    data: evaluationData.map(d => d.predicted),
+                    borderColor: '#0d6efd',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.2,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'bottom' } },
+            scales: {
+                x: { ticks: { maxTicksLimit: 8 } },
+                y: { title: { display: true, text: 'Temperature (°C)' } }
+            }
+        }
+    });
+</script>
+{% endif %}
+</body>
+</html>

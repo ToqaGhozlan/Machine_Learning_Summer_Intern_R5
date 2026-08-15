@@ -1,0 +1,146 @@
+:root {
+    --brand-gradient: linear-gradient(135deg, #4f8ff7 0%, #2c5fd6 100%);
+}
+
+body {
+    background: #f4f7fb;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.app-shell {
+    min-height: 100vh;
+}
+
+.brand-icon {
+    font-size: 2.75rem;
+    color: #2c5fd6;
+}
+
+.app-title {
+    font-weight: 700;
+    color: #1c2b4a;
+    letter-spacing: -0.02em;
+}
+
+.app-subtitle {
+    color: #5b6b8c;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.card {
+    border: none;
+    border-radius: 1rem;
+}
+
+.form-card .card-heading,
+.card-heading {
+    color: #1c2b4a;
+    font-weight: 600;
+}
+
+.form-control-lg {
+    border-radius: 0.65rem;
+    border: 1.5px solid #e1e7f0;
+    padding: 0.75rem 1rem;
+}
+
+.form-control-lg:focus {
+    border-color: #4f8ff7;
+    box-shadow: 0 0 0 0.2rem rgba(79, 143, 247, 0.15);
+}
+
+.invalid-feedback.d-block {
+    color: #d9534f;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: var(--brand-gradient);
+    border: none;
+    border-radius: 0.65rem;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(44, 95, 214, 0.3);
+}
+
+.result-card {
+    border-radius: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.result-icon {
+    font-size: 2.25rem;
+}
+
+.result-temp {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.result-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+    .app-title { font-size: 1.5rem; }
+    .result-temp { font-size: 2.25rem; }
+}
+
+
+.evaluation-card {
+    overflow: hidden;
+}
+
+.metric-box {
+    background: #f7f9fc;
+    border: 1px solid #e6ebf2;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    text-align: center;
+    height: 100%;
+}
+
+.metric-label {
+    color: #5b6b8c;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    color: #1c2b4a;
+    font-size: 1.7rem;
+    font-weight: 800;
+    margin-top: 0.15rem;
+}
+
+.metric-help {
+    color: #7a879d;
+    font-size: 0.75rem;
+    margin-top: 0.1rem;
+}
+
+.baseline-box {
+    background: #f7f9fc;
+    border: 1px solid #e6ebf2;
+    border-radius: 0.8rem;
+    padding: 1rem;
+}
